@@ -2,14 +2,9 @@
 ; bank.s
 ; ---------------------------------------------------------------------------
 ;
-; Wait for interrupt and return
 
 .export  _switch_bank
 BANK_REG = $CE00
-
-; ---------------------------------------------------------------------------
-; Wait for interrupt:  Forces the assembler to emit a WAI opcode ($CB)
-; ---------------------------------------------------------------------------
 
 .segment  "CODE"
 

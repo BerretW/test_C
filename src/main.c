@@ -1,17 +1,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-extern void __fastcall__ switch_bank (int);
-extern void wait();
+#include "acia.h"
+#include "bank.h"
+#include "wait.h"
+
+
 int i = 0;
 
 int main () {
+acia_init();
+wait();
+acia_puts("Ahoj svete, ja jsem Projekt65");
+acia_put_newline();
+acia_puts("A mimochodem C je fajn jazyk :D");
+
   while (1) {
       ++i;
-      wait();                                   //  Run forever
-      switch_bank(i);                                    //  Discard any other RX characters
+      wait();
+      switch_bank(i);
       if (i == 250) i = 0;
   }
-
-  return (0);                                     //  We should never get here!
+  return (0);
 }

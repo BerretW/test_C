@@ -12,26 +12,36 @@
 	.macpack	longbranch
 	.forceimport	__STARTUP__
 	.import		_acia_init
+	.import		_acia_putc
 	.import		_acia_puts
 	.import		_acia_put_newline
-	.import		_switch_bank
+	.import		_acia_getc
 	.import		_wait
+	.import		_spiBegin
+	.import		_spiEnd
+	.import		_spiInit
+	.import		_spiWrite
 	.export		_i
+	.export		_c
 	.export		_main
 
 .segment	"DATA"
 
 _i:
 	.word	$0000
+_c:
+	.byte	$00
 
 .segment	"RODATA"
 
-S0002:
-	.byte	$41,$20,$6D,$69,$6D,$6F,$63,$68,$6F,$64,$65,$6D,$20,$43,$20,$6A
-	.byte	$65,$20,$66,$61,$6A,$6E,$20,$6A,$61,$7A,$79,$6B,$20,$3A,$44,$00
 S0001:
 	.byte	$41,$68,$6F,$6A,$20,$73,$76,$65,$74,$65,$2C,$20,$6A,$61,$20,$6A
-	.byte	$73,$65,$6D,$20,$50,$72,$6F,$6A,$65,$6B,$74,$36,$35,$00
+	.byte	$73,$65,$6D,$20,$50,$72,$6F,$6A,$65,$6B,$74,$36,$35,$20,$53,$50
+	.byte	$49,$00
+S0002:
+	.byte	$41,$20,$6D,$69,$6D,$6F,$63,$68,$6F,$64,$65,$6D,$20,$43,$20,$6A
+	.byte	$65,$20,$66,$61,$6A,$6E,$20,$6A,$61,$7A,$79,$6B,$20,$32,$3A,$44
+	.byte	$00
 
 ; ---------------------------------------------------------------
 ; int __near__ main (void)
@@ -52,21 +62,22 @@ S0001:
 	lda     #<(S0002)
 	ldx     #>(S0002)
 	jsr     _acia_puts
-L0002:	inc     _i
-	bne     L0005
-	inc     _i+1
-L0005:	jsr     _wait
-	lda     _i
-	ldx     _i+1
-	jsr     _switch_bank
-	lda     _i+1
-	bne     L0002
-	lda     _i
-	cmp     #$FA
-	bne     L0002
+	jsr     _spiInit
+	jsr     _wait
+L0002:	jsr     _acia_getc
+	sta     _c
+	jsr     _acia_putc
+	jsr     _acia_put_newline
+	jsr     _spiBegin
+	jsr     _wait
+	lda     #$80
+	jsr     _spiWrite
 	lda     #$00
-	sta     _i
-	sta     _i+1
+	jsr     _spiWrite
+	lda     _c
+	jsr     _spiWrite
+	jsr     _wait
+	jsr     _spiEnd
 	jmp     L0002
 
 .endproc

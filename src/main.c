@@ -25,11 +25,9 @@ wait();
     acia_put_newline();
 
     spiBegin();
-    wait();
     spiWrite(0x80);
     spiWrite(0x00);
     spiWrite(c);
-    wait();
     spiEnd();
 
   }

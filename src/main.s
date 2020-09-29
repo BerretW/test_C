@@ -69,14 +69,12 @@ L0002:	jsr     _acia_getc
 	jsr     _acia_putc
 	jsr     _acia_put_newline
 	jsr     _spiBegin
-	jsr     _wait
 	lda     #$80
 	jsr     _spiWrite
 	lda     #$00
 	jsr     _spiWrite
 	lda     _c
 	jsr     _spiWrite
-	jsr     _wait
 	jsr     _spiEnd
 	jmp     L0002
 

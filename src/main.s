@@ -17,10 +17,10 @@
 	.import		_acia_put_newline
 	.import		_acia_getc
 	.import		_wait
-	.import		_spiBegin
-	.import		_spiEnd
 	.import		_spiInit
-	.import		_spiWrite
+	.import		_gd_putc
+	.import		_gd_backc
+	.import		_gd_getc
 	.export		_i
 	.export		_c
 	.export		_main
@@ -64,18 +64,17 @@ S0002:
 	jsr     _acia_puts
 	jsr     _spiInit
 	jsr     _wait
+	ldx     #$00
+	lda     #$14
+	jsr     _gd_backc
 L0002:	jsr     _acia_getc
 	sta     _c
-	jsr     _acia_putc
-	jsr     _acia_put_newline
-	jsr     _spiBegin
-	lda     #$80
-	jsr     _spiWrite
-	lda     #$00
-	jsr     _spiWrite
+	jsr     _gd_putc
 	lda     _c
-	jsr     _spiWrite
-	jsr     _spiEnd
+	jsr     _acia_putc
+	jsr     _gd_getc
+	sta     _c
+	jsr     _acia_putc
 	jmp     L0002
 
 .endproc

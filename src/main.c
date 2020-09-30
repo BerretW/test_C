@@ -6,6 +6,7 @@
 #include "wait.h"
 #include "spi.h"
 #include "utils.h"
+#include "GameDuino.h"
 
 
 int i = 0;
@@ -19,16 +20,15 @@ acia_puts("A mimochodem C je fajn jazyk 2:D");
 
 spiInit();
 wait();
+gd_backc(20);
+
   while (1) {
     c = acia_getc();
+    gd_putc(c);
+    //wait_s();
     acia_putc(c);
-    acia_put_newline();
-
-    spiBegin();
-    spiWrite(0x80);
-    spiWrite(0x00);
-    spiWrite(c);
-    spiEnd();
+    c = gd_getc();
+    acia_putc(c);
 
   }
   return (0);
